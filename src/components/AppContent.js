@@ -7,6 +7,7 @@ import Buttons from './Buttons';
 import AuthContent from './AuthContent';
 import LoginForm from './LoginForm';
 import WelcomeContent from './WelcomeContent'
+import Board from "./board/Board";
 
 export default class AppContent extends React.Component {
 
@@ -78,6 +79,7 @@ export default class AppContent extends React.Component {
                 {this.state.componentToShow === "welcome" && <WelcomeContent /> }
                 {this.state.componentToShow === "login" && <LoginForm onLogin={this.onLogin} onRegister={this.onRegister} />}
                 {this.state.componentToShow === "messages" && <AuthContent />}
+
 
             </>
         );
