@@ -145,8 +145,9 @@ function Board() {
                                 </div>
                             ) : (
                                 <div>
-                                    <Card.Title>{post.title}</Card.Title>
-                                    <Card.Text>{post.content}</Card.Text>
+                                    <Card.Title>제목 : {post.title}</Card.Title>
+                                    <Card.Text>내용 : {post.content}</Card.Text>
+                                    <Card.Text>댓글 : {post.comments ? post.comments.length : 0}개</Card.Text>
                                     <Button variant="info" onClick={() => startEditMode(post.id)}>수정</Button>
                                     <Button variant="danger" onClick={() => deletePost(post.id)}>삭제</Button>
                                 </div>

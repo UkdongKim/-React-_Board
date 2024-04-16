@@ -60,7 +60,7 @@ export default class AppContent extends React.Component {
                 password: password
             }).then(
             (response) => {
-                this.setState({componentToShow: "messages"});
+                this.setState({componentToShow: "welcome"});
             }).catch(
             (error) => {
                 this.setState({componentToShow: "welcome"})
