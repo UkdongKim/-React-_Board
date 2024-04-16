@@ -19,6 +19,18 @@ function Board() {
         fetchPosts();
     }, []);
 
+    const updateCallFromChild = () => {
+        fetchPosts();
+    };
+
+    useEffect(()=>{
+        if(showComments){
+            const selectedPost = posts.find(post => post.id === selectedPostId);
+            setSelectedPostComments(selectedPost.comments || []);
+        }
+        return;
+    }, [posts])
+
     const fetchPosts = () => {
         request(
             "GET",
@@ -181,6 +193,7 @@ function Board() {
                     showComments={showComments}
                     selectedPostId={selectedPostId}
                     comments={selectedPostComments} // 선택된 게시글의 댓글 목록을 CommentBox에 전달
+                    updateComments={updateCallFromChild}
                 />
             )}
         </Container>

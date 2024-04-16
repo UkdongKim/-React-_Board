@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Card, ListGroup, Form, Button, Badge } from 'react-bootstrap';
 import { request } from '../../helpers/axios_helper';
 
-function CommentBox({ showComments, selectedPostId, comments }) {
+function CommentBox({ showComments, selectedPostId, comments , updateComments}) {
     const [newComment, setNewComment] = useState('');
 
     const handleCommentSubmit = () => {
@@ -19,7 +19,13 @@ function CommentBox({ showComments, selectedPostId, comments }) {
                 if (response.data) {
                     // 댓글 목록을 다시 불러오기
                     // 여기서는 새로고침 없이 댓글 목록을 업데이트하는 방식을 사용할 수도 있습니다.
-                    window.location.reload();
+                    // window.location.reload();
+                    console.log("After add comment" ,response.data);
+
+                    if(response.data.statusCode==="OK"){
+                        updateComments();
+                        setNewComment('');
+                    }
                 }
             })
             .catch(error => {
@@ -27,6 +33,8 @@ function CommentBox({ showComments, selectedPostId, comments }) {
                 // 실패한 경우에 대한 처리
             });
     };
+
+
 
     return (
         <div style={{
