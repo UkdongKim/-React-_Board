@@ -1,9 +1,33 @@
-// CommentBox.js
-
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, ListGroup, Form, Button, Badge } from 'react-bootstrap';
+import { request } from '../../helpers/axios_helper';
 
 function CommentBox({ showComments, selectedPostId, comments }) {
+    const [newComment, setNewComment] = useState('');
+
+    const handleCommentSubmit = () => {
+        // 새로운 댓글 데이터 생성
+        const commentData = {
+            comment: newComment,
+            postId: selectedPostId
+        };
+
+        // API를 통해 댓글 등록 요청
+        request("POST", "/posts/comments", commentData)
+            .then(response => {
+                // 댓글이 성공적으로 등록된 경우
+                if (response.data) {
+                    // 댓글 목록을 다시 불러오기
+                    // 여기서는 새로고침 없이 댓글 목록을 업데이트하는 방식을 사용할 수도 있습니다.
+                    window.location.reload();
+                }
+            })
+            .catch(error => {
+                console.error('Error adding comment:', error);
+                // 실패한 경우에 대한 처리
+            });
+    };
+
     return (
         <div style={{
             width: '25%',
@@ -33,9 +57,15 @@ function CommentBox({ showComments, selectedPostId, comments }) {
                     </ListGroup>
                     <Form className="mt-3">
                         <Form.Group controlId="comment">
-                            <Form.Control as="textarea" rows={3} placeholder="댓글을 입력하세요" />
+                            <Form.Control
+                                as="textarea"
+                                rows={3}
+                                placeholder="댓글을 입력하세요"
+                                value={newComment}
+                                onChange={(e) => setNewComment(e.target.value)}
+                            />
                         </Form.Group>
-                        <Button variant="primary" type="submit">댓글 등록</Button>
+                        <Button variant="primary" onClick={handleCommentSubmit}>댓글 등록</Button>
                     </Form>
                 </Card.Body>
             </Card>
