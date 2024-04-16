@@ -1,12 +1,18 @@
+// Board.js
+
 import React, { useState, useEffect } from 'react';
 import { request } from '../../helpers/axios_helper';
-import { Container, Form, Button, Card } from 'react-bootstrap'; // 부트스트랩 컴포넌트 임포트
+import { Container, Form, Button, Card } from 'react-bootstrap';
+import CommentBox from "./CommentBox";
 
 function Board() {
     const [posts, setPosts] = useState([]);
     const [newPost, setNewPost] = useState({title: '', content: ''});
     const [editMode, setEditMode] = useState(null);
     const [updatedPost, setUpdatedPost] = useState({title: '', content: ''});
+    const [selectedPostId, setSelectedPostId] = useState(null); // 선택된 게시글의 ID를 저장
+    const [showComments, setShowComments] = useState(false); // 댓글 목록을 보이는지 여부를 나타내는 상태 변수
+    const [selectedPostComments, setSelectedPostComments] = useState([]); // 선택된 게시글의 댓글 목록을 저장하는 상태 변수
 
     // 게시글 목록 불러오기
     useEffect(() => {
@@ -92,6 +98,19 @@ function Board() {
             });
     };
 
+    // 특정 게시글 클릭시 댓글 목록을 토글하는 함수
+    const toggleComments = (postId) => {
+        if (selectedPostId === postId) {
+            setShowComments(!showComments);
+        } else {
+            setSelectedPostId(postId);
+            setShowComments(true); // 선택된 게시글의 댓글 목록을 보이도록 설정
+            // 선택된 게시글의 댓글을 가져와서 상태에 저장
+            const selectedPost = posts.find(post => post.id === postId);
+            setSelectedPostComments(selectedPost.comments || []);
+        }
+    };
+
     return (
         <Container>
             <h2 className="mt-4">게시판</h2>
@@ -120,7 +139,7 @@ function Board() {
             <div>
                 {posts.map(post => (
                     <Card key={post.id} className="mb-3">
-                        <Card.Body>
+                        <Card.Body onClick={() => toggleComments(post.id)}>
                             {editMode === post.id ? (
                                 <div className="update-form">
                                     <Form.Group controlId="title">
@@ -156,10 +175,16 @@ function Board() {
                     </Card>
                 ))}
             </div>
+            {/* 선택된 게시글의 ID가 있을 때만 댓글 창을 보여줍니다. */}
+            {selectedPostId && (
+                <CommentBox
+                    showComments={showComments}
+                    selectedPostId={selectedPostId}
+                    comments={selectedPostComments} // 선택된 게시글의 댓글 목록을 CommentBox에 전달
+                />
+            )}
         </Container>
-
-
-    )
+    );
 }
 
 export default Board;
